@@ -32,6 +32,16 @@ A **devcontainer** is defined in `.devcontainer/devcontainer.json` — open the 
 
 Extensions are listed twice on purpose: `devcontainer.json` **installs** them in the container, `.vscode/extensions.json` **recommends** them to people working on the host. Keep the two lists in step, or host users silently lose Tailwind class sorting and format-on-save.
 
+## Contributing
+
+`main` is protected by a ruleset with **no bypass actors** — it applies to admins too. Direct pushes are rejected.
+
+- Work on a branch, open a PR.
+- `Checks` and `Build image` must pass before merge.
+- Branches must be **up to date with `main`** before merging, so CI result reflects the code that will actually land.
+- No approving review is required — either of us can merge our own PR once CI is green. That's a deliberate starting point, not a statement that review doesn't matter; revisit if the project grows.
+- Force pushes to `main` and branch deletion are blocked.
+
 ## Formatting
 
 Prettier owns formatting — tabs, single quotes, semicolons. Config in `.prettierrc.mjs`.
