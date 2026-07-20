@@ -14,6 +14,14 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # TypeScript 7 is blocked upstream: @astrojs/check@0.9.9 (the latest)
+      # declares peer typescript "^5.0.0 || ^6.0.0", so `npm ci` fails outright
+      # with ERESOLVE. Without this, Dependabot re-proposes it every week and
+      # the PR can never go green. Remove once @astrojs/check supports TS 7.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /
