@@ -1,63 +1,108 @@
-# Astro Starter Kit: Blog
+# katomatik-web
+
+[![CI](https://github.com/katomatik-com/katomatik-web/actions/workflows/ci.yml/badge.svg)](https://github.com/katomatik-com/katomatik-web/actions/workflows/ci.yml)
+
+Static site for [katomatik.com](https://katomatik.com) — projects and blog.
+
+Built with [Astro](https://astro.build) and Tailwind, output as static HTML,
+served from a container.
+
+## Quick start
+
+Requires Node `>=22.12.0`.
 
 ```sh
-npm create astro@latest -- --template blog
+npm install
+npm run dev        # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-Features:
+| Command                | Action                           |
+| :--------------------- | :------------------------------- |
+| `npm run dev`          | Dev server at `localhost:4321`   |
+| `npm run build`        | Typecheck, then build to `dist/` |
+| `npm run preview`      | Serve the built site locally     |
+| `npm run check`        | Typecheck `.astro` files         |
+| `npm run format`       | Format with Prettier             |
+| `npm run format:check` | Check formatting without writing |
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+`build` runs `check` first, so a type error fails the build. Vite alone does
+not typecheck.
 
-## 🚀 Project Structure
+## Adding a post
 
-Inside of your Astro project, you'll see the following folders and files:
+Create a Markdown file in `src/content/blog/`. The filename becomes the URL
+(`my-post.md` → `/blog/my-post/`).
+
+```markdown
+---
+title: 'Post title'
+description: 'One or two sentences. Used for the meta description and RSS.'
+pubDate: 2026-07-20
+---
+
+Write here.
+```
+
+Optional: `updatedDate`, and `heroImage` pointing at a file in `src/assets/`.
+
+## Adding a project
+
+Same idea, in `src/content/projects/`.
+
+```markdown
+---
+title: 'Project name'
+description: 'What it is, in a sentence.'
+startDate: 2026-07-20
+status: 'active' # active | paused | shipped
+tags: ['astro', 'kubernetes']
+draft: false
+---
+
+Write here.
+```
+
+Optional: `repoUrl`, `liveUrl`, `heroImage`.
+
+**Drafts** (`draft: true`) show in `npm run dev` and are excluded from the
+production build — useful for writing something over several sittings.
+
+Frontmatter is schema-checked, so a missing or misspelled field fails the build
+rather than silently rendering wrong. The schemas are in `src/content.config.ts`.
+
+## Structure
 
 ```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+src/
+├── content/        # blog posts and project write-ups (Markdown)
+├── layouts/        # BaseLayout owns the page chrome; others wrap it
+├── components/
+├── pages/          # routes
+└── styles/         # global.css — design tokens and theming
+docker/             # nginx config for the container image
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Deployment
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Pushing to `main` builds a container image and publishes it to GHCR, tagged by
+commit SHA:
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+```text
+ghcr.io/katomatik-com/katomatik-web:<sha>
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+Kubernetes manifests live in the `homelab` repo, not here.
 
-## 🧞 Commands
+## More
 
-All commands are run from the root of the project, from a terminal:
+- [`AGENTS.md`](AGENTS.md) — project conventions and the reasoning behind them
+- [Astro docs](https://docs.astro.build)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## License
 
-## 👀 Want to learn more?
+Code is [MIT](LICENSE).
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Site content — blog posts, project write-ups, images — is © Katomatik and not
+covered by that license.
