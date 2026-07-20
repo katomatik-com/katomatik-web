@@ -38,10 +38,16 @@ jobs:
 
       # Internal links only. --offline skips network entirely, so someone
       # else's dead blog post can never block a deploy.
+      # --root-dir, not --base: root-relative links in local files need an
+      # absolute directory; --base only accepts a full URL.
       - name: Check internal links
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --offline --base dist --include-fragments 'dist/**/*.html'
+          args: >-
+            --offline
+            --root-dir ${{ github.workspace }}/dist
+            --include-fragments
+            'dist/**/*.html'
           fail: true
 
       # External links reported, never fatal.
@@ -49,7 +55,9 @@ jobs:
         continue-on-error: true
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --base dist 'dist/**/*.html'
+          args: >-
+            --root-dir ${{ github.workspace }}/dist
+            'dist/**/*.html'
           fail: false
           output: lychee-external.md
 

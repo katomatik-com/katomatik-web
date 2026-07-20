@@ -30,6 +30,14 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # Node majors are a manual decision. Dependabot can only edit the
+      # Dockerfile, but the version is declared in four places (.nvmrc,
+      # engines, Dockerfile, devcontainer) which must move together — and it
+      # proposed 26, which is not LTS. Patch and minor bumps still come through.
+      - dependency-name: node
+        update-types:
+          - version-update:semver-major
 
   # The devcontainer base image, which would otherwise drift from the
   # Dockerfile's Node version unnoticed.
@@ -37,3 +45,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
