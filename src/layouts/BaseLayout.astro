@@ -1,0 +1,35 @@
+---
+import type { ImageMetadata } from 'astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+interface Props {
+	title: string;
+	description: string;
+	image?: ImageMetadata;
+	/** `page` is the reading measure; `wide` is for index grids. */
+	width?: 'page' | 'wide';
+}
+
+const { title, description, image, width = 'page' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} image={image} />
+	</head>
+	<body>
+		<Header />
+		<main
+			class:list={[
+				'mx-auto w-full px-4 py-12',
+				width === 'wide' ? 'max-w-wide' : 'max-w-page',
+			]}
+		>
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
