@@ -5,25 +5,38 @@ import ThemeToggle from './ThemeToggle.astro';
 import { Image } from 'astro:assets';
 import cat1 from '../assets/cat1.png';
 import cat2 from '../assets/cat2.png';
-
-
-
 ---
 
 <header class="border-edge bg-page border-b">
 	<nav class="max-w-page mx-auto flex items-center justify-between gap-4 px-4">
-		<a href="/"><div class="group">
-			<Image class="absolute top-2.5 opacity-100 group-hover:opacity-0 size-12 inline-block" src={cat1} alt="drawing of a cat" />
-			<Image class="absolute top-2.5 opacity-0 group-hover:opacity-100 size-12 inline-block" src={cat2} alt="drawing of a cat meowing" />
-			<svg
-				class="stroke-ink fill-ink absolute left-28 top-9 opacity-0 group-hover:opacity-100"
-				viewBox="0 0 14 14" width="14" height="14" aria-hidden="true">
-				<path d="M0 7 14 0 14 14"></path>
-			</svg>
-			<span class="absolute left-31 top-4 opacity-0 group-hover:opacity-100 bg-ink inline-block py-1 px-2 text-page font-bold no-underline rounded-lg" >
-				{SITE_TITLE}
-		</span>
-		</div></a>
+		<a href="/"
+			><div class="group">
+				<Image
+					class="absolute top-2.5 inline-block size-12 opacity-100 group-hover:opacity-0"
+					src={cat1}
+					alt="drawing of a cat"
+				/>
+				<Image
+					class="absolute top-2.5 inline-block size-12 opacity-0 group-hover:opacity-100"
+					src={cat2}
+					alt="drawing of a cat meowing"
+				/>
+				<svg
+					class="stroke-ink fill-ink absolute top-9 left-28 opacity-0 group-hover:opacity-100"
+					viewBox="0 0 14 14"
+					width="14"
+					height="14"
+					aria-hidden="true"
+				>
+					<path d="M0 7 14 0 14 14"></path>
+				</svg>
+				<span
+					class="bg-ink text-page absolute top-4 left-31 inline-block rounded-lg px-2 py-1 font-bold no-underline opacity-0 group-hover:opacity-100"
+				>
+					{SITE_TITLE}
+				</span>
+			</div></a
+		>
 		<div class="flex items-center">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/projects">Projects</HeaderLink>

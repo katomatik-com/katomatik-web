@@ -193,45 +193,6 @@
 	}
 }
 
-@keyframes kato-bounce {
-	0% {
-		transform: rotate(-7deg);
-	}
-	10% {
-		transform: rotate(-3.5deg) translate(0, -4.3%);
-	}
-	18% {
-		transform: translate(0, -5.7%);
-	}
-	26% {
-		transform: rotate(2.1deg) translate(0, -4.3%);
-	}
-	34% {
-		transform: rotate(3.9deg) translate(0, -1.5%);
-	}
-	38% {
-		transform: rotate(4.5deg);
-	}
-	40% {
-		transform: rotate(4.5deg);
-	}
-	60% {
-		transform: rotate(-2.1deg);
-	}
-	64% {
-		transform: rotate(-2.8deg);
-	}
-	68% {
-		transform: rotate(-2.8deg);
-	}
-	85% {
-		transform: rotate(1.4deg);
-	}
-	100% {
-		transform: rotate(-0.2deg);
-	}
-}
-
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
