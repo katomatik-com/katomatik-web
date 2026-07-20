@@ -133,9 +133,18 @@ Build and release are split across repos on purpose:
 | `katomatik-web` (this one) | Source, Dockerfile, image build          |
 | `homelab`                  | k8s manifests, cloudflared ingress route |
 
-- **Image:** multi-stage — `node:lts` builds, `nginx:alpine` serves `/app/dist` on port **8080**. No Node in the final image.
-- **CI:** GitHub Actions → **GHCR** on merge to `main`, tagged by commit SHA (not `latest`) so rollouts are deterministic.
+- **Image:** multi-stage — `node:22-alpine` builds, `nginx:alpine` serves `/usr/share/nginx/html` on port **8080** (not 80, so the container can run as non-root). ~94MB, no Node in the final image.
+- **CI:** `.github/workflows/ci.yml` builds on every push and PR, pushes to **GHCR** only on push to `main`. Tagged by commit SHA, never `latest` — a k8s rollout must reference an immutable tag.
+- The image build runs `npm run build`, which runs `astro check`, so a type error fails CI without a separate step.
 - This repo stays unaware it runs on Kubernetes.
+
+nginx config lives in `docker/nginx.conf`. Three things there are load-bearing:
+
+- **`absolute_redirect off`** — without it nginx builds redirect URLs from its own listen port, so `/blog` sends visitors to `http://host:8080/blog/`, unreachable through the Cloudflare Tunnel.
+- **`try_files $uri $uri/ $uri.html =404`** — no SPA fallback. A bad URL must 404, not silently render the homepage.
+- **Cache split** — `/_astro/` is immutable for a year (fingerprinted); `.html` is `no-cache` so deploys reach returning visitors. Set `Cache-Control` via `add_header` only; adding `expires` too emits a second, conflicting header.
+
+**GHCR packages do not inherit repo visibility.** The repo is public but the package defaults to private, so pulls need an `imagePullSecret` until the package is made public in its own settings.
 
 Sibling `katomatik-*` services get their own repos. Deliberately not a monorepo — no shared language or dependency tree.
 
@@ -147,15 +156,17 @@ Sibling `katomatik-*` services get their own repos. Deliberately not a monorepo 
 - [x] Convert all `<style>` blocks to Tailwind utilities — none remain in `src/`
 - [x] `SITE_TITLE` / `SITE_DESCRIPTION`
 - [x] Theme toggle, persisted, no flash on load
-- [ ] `GITHUB_URL` in `consts.ts` is empty — header link stays hidden until set
-- [ ] `site:` is still `https://example.com` → `https://katomatik.com`
+- [x] `site:` → `https://katomatik.com`, `GITHUB_URL` set
+- [x] Dockerfile, nginx config, GitHub Actions → GHCR
+- [ ] Make the GHCR package public, or add an `imagePullSecret` in `homelab`
+- [ ] k8s manifests in the `homelab` repo
 - [ ] Real homepage content (`index.astro` is title + description only)
 - [ ] `about.astro` is still lorem ipsum
 - [ ] Replace 5 sample posts and placeholder images in `src/assets/`
+- [ ] Replace the placeholder `src/content/projects/katomatik-web.md`
 - [x] `projects` collection, listing, detail route, draft filtering
 - [x] Extract `BaseLayout.astro` so page chrome lives in one place
 - [x] Verify contrast — all text pairs pass WCAG AA in both themes (lowest: light accent 4.58:1)
-- [ ] Dockerfile, GitHub Actions workflow
 
 ## Astro documentation
 
