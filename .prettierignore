@@ -1,0 +1,9 @@
+dist/
+node_modules/
+.astro/
+package-lock.json
+
+# Authored content, not code. Prettier rewrites fenced code samples inside
+# posts (re-indenting examples the post is deliberately showing), and prose
+# shouldn't be reformatted by a tool the author didn't run.
+src/content/
