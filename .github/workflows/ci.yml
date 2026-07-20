@@ -15,8 +15,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  format:
-    name: Format
+  checks:
+    name: Checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -30,6 +30,28 @@ jobs:
 
       - run: npm ci
       - run: npm run format:check
+      - run: npm run lint
+
+      # Build here too — link checking needs the rendered HTML, and the image
+      # job's build happens inside Docker where we can't reach the output.
+      - run: npm run build
+
+      # Internal links only. --offline skips network entirely, so someone
+      # else's dead blog post can never block a deploy.
+      - name: Check internal links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --base dist --include-fragments 'dist/**/*.html'
+          fail: true
+
+      # External links reported, never fatal.
+      - name: Check external links
+        continue-on-error: true
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --base dist 'dist/**/*.html'
+          fail: false
+          output: lychee-external.md
 
   image:
     name: Build image

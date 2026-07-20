@@ -1,0 +1,39 @@
+version: 2
+
+# Minor and patch updates are grouped into a single PR per ecosystem.
+# Ungrouped, this repo produces 5-10 PRs a week and they stop getting read.
+# Majors stay separate — that's where breakage lives, and each deserves review.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions-minor-patch:
+        update-types:
+          - minor
+          - patch
+
+  # node:24-alpine and nginx:alpine in the Dockerfile.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+
+  # The devcontainer base image, which would otherwise drift from the
+  # Dockerfile's Node version unnoticed.
+  - package-ecosystem: devcontainers
+    directory: /
+    schedule:
+      interval: weekly

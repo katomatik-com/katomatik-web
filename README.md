@@ -1,6 +1,7 @@
 # katomatik-web
 
 [![CI](https://github.com/katomatik-com/katomatik-web/actions/workflows/ci.yml/badge.svg)](https://github.com/katomatik-com/katomatik-web/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/katomatik-com/katomatik-web)](LICENSE)
 
 Static site for [katomatik.com](https://katomatik.com) — projects and blog.
 
