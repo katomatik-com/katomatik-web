@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<BaseLayout
+	title={`Not found · ${SITE_TITLE}`}
+	description="That page doesn't exist."
+>
+	<h1 class="text-4xl font-bold">Not found</h1>
+	<div class="wavy my-6 max-w-xs"></div>
+	<p class="text-ink-muted">
+		That page doesn't exist. Try the <a href="/">homepage</a>.
+	</p>
+</BaseLayout>

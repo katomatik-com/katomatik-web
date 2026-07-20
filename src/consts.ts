@@ -5,5 +5,5 @@ export const SITE_TITLE = 'Katomatik';
 export const SITE_DESCRIPTION =
 	'Notes on the things we build, and what we learned building them.';
 
-// TODO: set to the real repo/profile URL. While empty, the header link is hidden.
-export const GITHUB_URL = '';
+// Empty hides the header link.
+export const GITHUB_URL = 'https://github.com/katomatik-com/katomatik-web';
