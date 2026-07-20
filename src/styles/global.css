@@ -1,141 +1,239 @@
-/*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
+/*
+  Palette salvaged from the previous katomatik.com:
+  charcoal #454545 + whitesmoke, retro-web framing, playful hover motion.
+  Dark is the DEFAULT theme; light is the alternate.
+
+  Components use semantic tokens (bg-page, text-ink, ...) and never `dark:`
+  variants — the values below flip and the utilities stay the same.
+*/
+
+/*
+  Variants for elements that must differ STRUCTURALLY between themes — the
+  toggle's sun/moon icons. Not for colors: colors always go through tokens.
+*/
+@custom-variant theme-dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+@custom-variant theme-light (&:where([data-theme='light'], [data-theme='light'] *));
+
+@theme {
+	--font-sans: var(--font-atkinson), sans-serif;
+
+	/* Shared content measures — were repeated pixel widths in the template */
+	--container-page: 45rem; /* reading width, was 720px */
+	--container-wide: 60rem; /* index/grid width, was 960px */
+
+	--color-page: var(--c-page);
+	--color-raised: var(--c-raised);
+	--color-edge: var(--c-edge);
+	--color-ink: var(--c-ink);
+	--color-ink-muted: var(--c-ink-muted);
+	--color-accent: var(--c-accent);
+	--color-outline: var(--c-outline);
+}
+
+/* Dark — default */
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	--c-page: #454545;
+	--c-raised: #515151;
+	--c-edge: #6b6b6b;
+	--c-ink: whitesmoke;
+	--c-ink-muted: #b8b8b8;
+	--c-accent: #f2b134;
+	--c-outline: #ffffff; /* hover halo, was hardcoded white */
+	color-scheme: dark;
 }
-body {
-	font-family: var(--font-atkinson);
-	margin: 0;
-	padding: 0;
-	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+
+/* Light — opt in via prefers-color-scheme, or explicitly via the toggle */
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme='dark']) {
+		--c-page: #f5f5f5;
+		--c-raised: #ffffff;
+		--c-edge: #cfcfcf;
+		--c-ink: #2a2a2a;
+		--c-ink-muted: #5c5c5c;
+		--c-accent: #9a6410;
+		--c-outline: #000000;
+		color-scheme: light;
+	}
 }
-main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
+
+:root[data-theme='light'] {
+	--c-page: #f5f5f5;
+	--c-raised: #ffffff;
+	--c-edge: #cfcfcf;
+	--c-ink: #2a2a2a;
+	--c-ink-muted: #5c5c5c;
+	--c-accent: #9a6410;
+	--c-outline: #000000;
+	color-scheme: light;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
-	line-height: 1.2;
+
+:root[data-theme='dark'] {
+	--c-page: #454545;
+	--c-raised: #515151;
+	--c-edge: #6b6b6b;
+	--c-ink: whitesmoke;
+	--c-ink-muted: #b8b8b8;
+	--c-accent: #f2b134;
+	--c-outline: #ffffff;
+	color-scheme: dark;
 }
-h1 {
-	font-size: 3.052em;
+
+@layer base {
+	body {
+		background-color: var(--color-page);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: 20px;
+		line-height: 1.7;
+		overflow-wrap: break-word;
+
+		/* Sticky footer: keeps the footer at the viewport bottom on short pages */
+		display: flex;
+		min-height: 100svh;
+		flex-direction: column;
+	}
+
+	@media (max-width: 720px) {
+		body {
+			font-size: 18px;
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		line-height: 1.2;
+		text-wrap: balance;
+	}
+
+	a {
+		color: var(--color-accent);
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
 }
-h2 {
-	font-size: 2.441em;
+
+/*
+  Markdown post bodies. Prose vars point at our semantic tokens, which already
+  flip per theme — so `prose-invert` is never needed and must not be used.
+*/
+.prose {
+	--tw-prose-body: var(--color-ink);
+	--tw-prose-headings: var(--color-ink);
+	--tw-prose-lead: var(--color-ink-muted);
+	--tw-prose-links: var(--color-accent);
+	--tw-prose-bold: var(--color-ink);
+	--tw-prose-counters: var(--color-ink-muted);
+	--tw-prose-bullets: var(--color-edge);
+	--tw-prose-hr: var(--color-edge);
+	--tw-prose-quotes: var(--color-ink);
+	--tw-prose-quote-borders: var(--color-accent);
+	--tw-prose-captions: var(--color-ink-muted);
+	--tw-prose-code: var(--color-ink);
+	--tw-prose-pre-code: var(--color-ink);
+	--tw-prose-pre-bg: var(--color-raised);
+	--tw-prose-th-borders: var(--color-edge);
+	--tw-prose-td-borders: var(--color-edge);
 }
-h3 {
-	font-size: 1.953em;
+
+/* The typography plugin wraps inline code in literal backticks by default. */
+.prose code::before,
+.prose code::after {
+	content: none;
 }
-h4 {
-	font-size: 1.563em;
-}
-h5 {
-	font-size: 1.25em;
-}
-strong,
-b {
-	font-weight: 700;
-}
-a {
-	color: var(--accent);
-}
-a:hover {
-	color: var(--accent);
-}
-p {
-	margin-bottom: 1em;
-}
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
-	width: 100%;
-}
-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-}
-code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+
+/* Inline code only — `pre > code` keeps Shiki's own colors. */
+.prose :not(pre) > code {
+	background-color: var(--color-raised);
+	padding: 0.1em 0.35em;
 	border-radius: 2px;
 }
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
+
+/*
+  Salvaged from the old site.
+  `.wavy` used a hardcoded white stroke; it's a mask here so it inherits
+  currentColor and works in both themes.
+*/
+@utility wavy {
+	height: 15px;
+	background-color: currentColor;
+	mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 50 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 10 Q 12.5 0, 25 10 T 50 10" stroke="black" fill="transparent" stroke-linecap="square" stroke-width="3"/></svg>');
+	mask-repeat: repeat-x;
+	mask-size: auto 100%;
 }
-pre > code {
-	all: unset;
+
+/* Retro picture frame from the old site */
+@utility frame {
+	border: 6px ridge var(--color-edge);
+	outline: 2px solid var(--color-edge);
+	outline-offset: -10px;
 }
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.333em;
-}
-hr {
-	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
-}
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
+
+/* Hover hop, with the halo themed instead of hardcoded white */
+@utility bounce-hover {
+	&:hover {
+		animation: kato-bounce 0.4s linear 1;
+		transform-origin: bottom;
+		filter: drop-shadow(2px 0 0 var(--color-outline))
+			drop-shadow(-2px 0 0 var(--color-outline))
+			drop-shadow(0 -2px 0 var(--color-outline));
 	}
 }
 
-.sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
-	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
-	white-space: nowrap;
+@keyframes kato-bounce {
+	0% {
+		transform: rotate(-7deg);
+	}
+	10% {
+		transform: rotate(-3.5deg) translate(0, -4.3%);
+	}
+	18% {
+		transform: translate(0, -5.7%);
+	}
+	26% {
+		transform: rotate(2.1deg) translate(0, -4.3%);
+	}
+	34% {
+		transform: rotate(3.9deg) translate(0, -1.5%);
+	}
+	38% {
+		transform: rotate(4.5deg);
+	}
+	40% {
+		transform: rotate(4.5deg);
+	}
+	60% {
+		transform: rotate(-2.1deg);
+	}
+	64% {
+		transform: rotate(-2.8deg);
+	}
+	68% {
+		transform: rotate(-2.8deg);
+	}
+	85% {
+		transform: rotate(1.4deg);
+	}
+	100% {
+		transform: rotate(-0.2deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
 }

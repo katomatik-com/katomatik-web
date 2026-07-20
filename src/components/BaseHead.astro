@@ -18,6 +18,30 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, image = FallbackImage } = Astro.props;
 ---
 
+<!--
+	Resolve the theme BEFORE first paint, otherwise the page renders in the
+	default theme and visibly flips. `is:inline` keeps Astro from bundling and
+	deferring this — it must run synchronously, here, ahead of any body content.
+	Always sets an explicit data-theme so the theme-dark/theme-light variants
+	have something to match.
+-->
+<script is:inline>
+	(() => {
+		let theme;
+		try {
+			theme = localStorage.getItem('theme');
+		} catch {
+			/* storage blocked — fall through to the system preference */
+		}
+		if (theme !== 'light' && theme !== 'dark') {
+			theme = window.matchMedia('(prefers-color-scheme: light)').matches
+				? 'light'
+				: 'dark';
+		}
+		document.documentElement.setAttribute('data-theme', theme);
+	})();
+</script>
+
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
