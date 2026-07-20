@@ -94,7 +94,6 @@ Custom utilities salvaged from the old site, defined via `@utility`:
 
 - `wavy` — the hand-drawn sine-wave divider. Rebuilt as a mask so it inherits `currentColor` instead of the old hardcoded white stroke.
 - `frame` — the `6px ridge` retro picture frame, for project and post thumbnails.
-- `bounce-hover` — the hover hop, halo themed via `--color-outline`.
 
 A global `prefers-reduced-motion` guard neutralizes animation; don't reintroduce motion that bypasses it.
 

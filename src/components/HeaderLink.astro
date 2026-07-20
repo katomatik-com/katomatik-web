@@ -13,10 +13,10 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 	href={href}
 	aria-current={isActive ? 'page' : undefined}
 	class:list={[
-		'text-ink inline-block border-b-4 px-2 py-4 no-underline transition-colors',
+		'text-ink inline-block border-b-4 px-2 py-4 no-underline transition',
 		isActive
 			? 'border-accent font-bold'
-			: 'hover:border-edge border-transparent',
+			: 'hover-up-low hover:border-edge border-transparent',
 		className,
 	]}
 	{...props}

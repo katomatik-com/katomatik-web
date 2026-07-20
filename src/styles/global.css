@@ -178,14 +178,18 @@
 	outline-offset: -10px;
 }
 
-/* Hover hop, with the halo themed instead of hardcoded white */
-@utility bounce-hover {
+@utility hover-up {
+	transition: transform ease 0.2s;
+	transform: translateY(0);
 	&:hover {
-		animation: kato-bounce 0.4s linear 1;
-		transform-origin: bottom;
-		filter: drop-shadow(2px 0 0 var(--color-outline))
-			drop-shadow(-2px 0 0 var(--color-outline))
-			drop-shadow(0 -2px 0 var(--color-outline));
+		transform: translateY(-2px);
+	}
+}
+@utility hover-up-low {
+	transition: transform ease 0.2s;
+	transform: translateY(2px);
+	&:hover {
+		transform: translateY(0);
 	}
 }
 
