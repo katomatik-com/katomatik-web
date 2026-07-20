@@ -130,11 +130,3 @@ nginx config lives in `docker/nginx.conf`. Three things there are load-bearing:
 **GHCR packages do not inherit repo visibility** — they have their own setting. This one is public, so the cluster pulls with no `imagePullSecret`. A new `katomatik-*` package will default to private and need the same change.
 
 Sibling `katomatik-*` services get their own repos. Deliberately not a monorepo — no shared language or dependency tree.
-
-## Open work
-
-- k8s manifests in the `homelab` repo
-- Real homepage content — `index.astro` is title + description only
-- `about.astro` is still lorem ipsum
-- Replace the 5 Astro sample posts and the placeholder images in `src/assets/`
-- Replace the placeholder `src/content/projects/katomatik-web.md`
