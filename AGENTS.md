@@ -2,6 +2,9 @@
 
 Static site for **katomatik.com**.
 
+Conventions and the reasoning behind them. For setup, commands, and how to add
+content, see [`README.md`](README.md) — don't duplicate it here.
+
 ## Stack
 
 - **Astro 7** (`^7.1.2`) — static output, no SSR adapter
@@ -21,14 +24,7 @@ npx astro dev --background    # serves http://localhost:4321
 npx astro dev status | logs | stop
 ```
 
-```bash
-npm run dev           # foreground dev server
-npm run check         # astro check — typechecks .astro files, not just .ts
-npm run format        # prettier --write .
-npm run format:check  # prettier --check . (for CI)
-npm run build         # astro check && astro build → ./dist
-npm run preview       # serve ./dist locally
-```
+The `npm` scripts are listed in the README.
 
 `build` runs `astro check` first, so a type error fails the build rather than shipping. That costs roughly 7s over a bare `astro build`; worth it, and it means CI needs no separate typecheck step. Vite alone does **not** typecheck — without `astro check`, a bad component prop builds and deploys silently.
 
@@ -56,31 +52,18 @@ Content uses **content collections**, not loose page files.
 
 `BlogPost.astro` and `ProjectPage.astro` wrap `BaseLayout` and add their own metadata headers.
 
-Collections use the **glob loader**. The blog schema takes the `({ image })` form so `heroImage` resolves to an optimized asset rather than a bare path:
+Collections use the **glob loader**. Field lists live in `src/content.config.ts` and are summarised for authors in the README — don't restate them here, they drift.
 
-```ts
-const blog = defineCollection({
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: z.optional(image()),
-		}),
-});
-```
+Two things about the schemas that aren't obvious from reading them:
 
-Adding a frontmatter field means updating the Zod schema. A missing required field fails the build — that's intentional. Don't loosen the schema to silence an error.
-
-The `projects` collection has its own schema: `title`, `description`, `startDate`, `status` (`active` | `paused` | `shipped`), `tags`, `repoUrl`, `liveUrl`, `heroImage`, `draft`.
+- They take the **`({ image })` form**, so `heroImage` resolves to an optimized asset rather than a bare path. A plain `z.string()` would typecheck and then skip image optimization entirely.
+- A missing required field **fails the build**. That's intentional; don't loosen a schema to silence an error.
 
 **Drafts** (`draft: true`) are visible in `astro dev` and excluded from production builds, via `import.meta.env.PROD` in both `projects/index.astro` and `projects/[...slug].astro`. Both need the filter — the listing and the route are separate queries, and filtering only one leaves an orphaned page or a dead link. `blog` has no draft field yet; add it to both places if you introduce one.
 
 ## Conventions
 
-- **Tailwind only.** No new `.css` files, no `<style>` blocks in components. Anything still carrying template CSS is pending conversion, not a pattern to copy.
+- **Tailwind only.** No new `.css` files, no `<style>` blocks in components. `src/styles/global.css` is the single stylesheet.
 - **Fonts are configured in `astro.config.mjs`**, not CSS. Atkinson is self-hosted via Astro's font API and exposed as `--font-atkinson`. Wire that variable into the Tailwind theme; don't re-import the font or hardcode `@font-face`.
 - Images go through `astro:assets` (`<Image />`), never bare `<img>`.
 - Prefer `.astro` components. Framework components only for real client-side interactivity.
@@ -144,39 +127,14 @@ nginx config lives in `docker/nginx.conf`. Three things there are load-bearing:
 - **`try_files $uri $uri/ $uri.html =404`** — no SPA fallback. A bad URL must 404, not silently render the homepage.
 - **Cache split** — `/_astro/` is immutable for a year (fingerprinted); `.html` is `no-cache` so deploys reach returning visitors. Set `Cache-Control` via `add_header` only; adding `expires` too emits a second, conflicting header.
 
-**GHCR packages do not inherit repo visibility.** The repo is public but the package defaults to private, so pulls need an `imagePullSecret` until the package is made public in its own settings.
+**GHCR packages do not inherit repo visibility** — they have their own setting. This one is public, so the cluster pulls with no `imagePullSecret`. A new `katomatik-*` package will default to private and need the same change.
 
 Sibling `katomatik-*` services get their own repos. Deliberately not a monorepo — no shared language or dependency tree.
 
-## Setup still pending
+## Open work
 
-- [x] `astro add tailwind`
-- [x] Token layer + theme switching in `global.css`
-- [x] `@tailwindcss/typography`, wired to the tokens via `.prose`
-- [x] Convert all `<style>` blocks to Tailwind utilities — none remain in `src/`
-- [x] `SITE_TITLE` / `SITE_DESCRIPTION`
-- [x] Theme toggle, persisted, no flash on load
-- [x] `site:` → `https://katomatik.com`, `GITHUB_URL` set
-- [x] Dockerfile, nginx config, GitHub Actions → GHCR
-- [ ] Make the GHCR package public, or add an `imagePullSecret` in `homelab`
-- [ ] k8s manifests in the `homelab` repo
-- [ ] Real homepage content (`index.astro` is title + description only)
-- [ ] `about.astro` is still lorem ipsum
-- [ ] Replace 5 sample posts and placeholder images in `src/assets/`
-- [ ] Replace the placeholder `src/content/projects/katomatik-web.md`
-- [x] `projects` collection, listing, detail route, draft filtering
-- [x] Extract `BaseLayout.astro` so page chrome lives in one place
-- [x] Verify contrast — all text pairs pass WCAG AA in both themes (lowest: light accent 4.58:1)
-
-## Astro documentation
-
-Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+- k8s manifests in the `homelab` repo
+- Real homepage content — `index.astro` is title + description only
+- `about.astro` is still lorem ipsum
+- Replace the 5 Astro sample posts and the placeholder images in `src/assets/`
+- Replace the placeholder `src/content/projects/katomatik-web.md`
