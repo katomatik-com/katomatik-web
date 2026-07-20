@@ -9,7 +9,7 @@ served from a container.
 
 ## Quick start
 
-Requires Node `>=22.12.0`.
+Requires Node 24 (see `.nvmrc`).
 
 ```sh
 npm install

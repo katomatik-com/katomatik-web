@@ -13,5 +13,13 @@ export default {
 			files: '*.astro',
 			options: { parser: 'astro' },
 		},
+		{
+			// devcontainer.json and the .vscode files are JSON with comments.
+			// The default `json` parser rejects them outright.
+			files: ['.devcontainer/devcontainer.json', '.vscode/*.json'],
+			// jsonc allows the comments; trailingComma: none keeps the files
+			// parseable by stricter readers than VS Code's.
+			options: { parser: 'jsonc', trailingComma: 'none' },
+		},
 	],
 };

@@ -23,7 +23,9 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version-file: package.json
+          # .nvmrc, not package.json — `engines` is a floor (">=24"), which
+          # setup-node would satisfy with any newer major, including non-LTS.
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci

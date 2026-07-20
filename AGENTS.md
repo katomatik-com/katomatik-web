@@ -11,7 +11,7 @@ content, see [`README.md`](README.md) — don't duplicate it here.
 - **Tailwind 4** via `@tailwindcss/vite`
 - **TypeScript** — `astro/tsconfigs/strict` + `strictNullChecks`
 - `@astrojs/mdx`, `@astrojs/sitemap`, `sharp`
-- Node `>=22.12.0`
+- Node **24** (LTS). Declared in four places that must not drift: `.nvmrc` (the source CI reads), `package.json` `engines`, the `Dockerfile` build stage, and `.devcontainer/devcontainer.json`. `engines` is a floor, so CI reads `.nvmrc` instead — otherwise setup-node would happily resolve a newer, non-LTS major.
 - Deployed as a container to k8s, fronted by Cloudflare Tunnel
 
 ## Development
@@ -28,6 +28,10 @@ The `npm` scripts are listed in the README.
 
 `build` runs `astro check` first, so a type error fails the build rather than shipping. That costs roughly 7s over a bare `astro build`; worth it, and it means CI needs no separate typecheck step. Vite alone does **not** typecheck — without `astro check`, a bad component prop builds and deploys silently.
 
+A **devcontainer** is defined in `.devcontainer/devcontainer.json` — open the repo in VS Code (Dev Containers) or Codespaces and the toolchain comes with it. It has no Docker access, so building the image is a host operation; add the `docker-in-docker` feature if that changes.
+
+Extensions are listed twice on purpose: `devcontainer.json` **installs** them in the container, `.vscode/extensions.json` **recommends** them to people working on the host. Keep the two lists in step, or host users silently lose Tailwind class sorting and format-on-save.
+
 ## Formatting
 
 Prettier owns formatting — tabs, single quotes, semicolons. Config in `.prettierrc.mjs`.
@@ -36,6 +40,7 @@ Prettier owns formatting — tabs, single quotes, semicolons. Config in `.pretti
 - It sorts Tailwind classes into a canonical order. Class attribute order never affects CSS (the cascade comes from stylesheet order), so this is purely cosmetic and safe.
 - **`src/content/` is excluded** — Prettier re-indents fenced code samples inside posts, rewriting example code the author wrote deliberately. Content is authored, not code.
 - Formatting is **not** wired into `build`. A formatting nit shouldn't block a deploy the way a type error should; run `format:check` in CI as its own step.
+- `.devcontainer/devcontainer.json` and `.vscode/*.json` use the **`jsonc`** parser with `trailingComma: 'none'`. They carry comments, which the default `json` parser rejects outright; the trailing-comma setting keeps them readable by stricter parsers than VS Code's.
 
 ## Architecture
 
