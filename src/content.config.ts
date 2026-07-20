@@ -17,4 +17,22 @@ const blog = defineCollection({
 		}),
 });
 
-export const collections = { blog };
+const projects = defineCollection({
+	// Load Markdown and MDX files in the `src/content/projects/` directory.
+	loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			startDate: z.coerce.date(),
+			status: z.enum(['active', 'paused', 'shipped']).default('active'),
+			tags: z.array(z.string()).default([]),
+			repoUrl: z.url().optional(),
+			liveUrl: z.url().optional(),
+			heroImage: z.optional(image()),
+			// Drafts are hidden in production builds, visible in `astro dev`.
+			draft: z.boolean().default(false),
+		}),
+});
+
+export const collections = { blog, projects };
