@@ -130,7 +130,8 @@ Build and release are split across repos on purpose:
 | `katomatik-web` (this one) | Source, Dockerfile, image build          |
 | `homelab`                  | k8s manifests, cloudflared ingress route |
 
-- **Image:** multi-stage — `node:22-alpine` builds, `nginx:alpine` serves `/usr/share/nginx/html` on port **8080** (not 80, so the container can run as non-root). ~94MB, no Node in the final image.
+- **Image:** multi-stage — `node:24-alpine` builds, `nginx:alpine` serves `/usr/share/nginx/html` on port **8080** (not 80, so the container can run as non-root). ~94MB, no Node in the final image.
+- **Multi-arch:** built for `linux/amd64,linux/arm64` via buildx. The cluster node is arm64 (Apple silicon / Asahi); a single-arch amd64 push leaves the kubelet with no matching manifest and the pod stuck in `ImagePullBackOff`. CI adds `setup-qemu-action` so the amd64 runner can build the arm64 stage under emulation.
 - **CI:** `.github/workflows/ci.yml` builds on every push and PR, pushes to **GHCR** only on push to `main`. Tagged by commit SHA, never `latest` — a k8s rollout must reference an immutable tag.
 - The image build runs `npm run build`, which runs `astro check`, so a type error fails CI without a separate step.
 - This repo stays unaware it runs on Kubernetes.
