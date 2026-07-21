@@ -102,7 +102,11 @@ projects.forEach((project) => {
 		};
 		btn.addEventListener('click', () => {
 			const tag = btn.id;
-			activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+			if (activeTags.has(tag)) {
+				activeTags.delete(tag);
+			} else {
+				activeTags.add(tag);
+			}
 			update();
 			filterPosts();
 		});
