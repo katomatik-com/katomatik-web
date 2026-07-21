@@ -5,7 +5,20 @@
 	// three places declare Node, and they must not drift.
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:24",
 
-	"postCreateCommand": "npm install",
+	// A named volume is created owned by root, but this image runs as `node`, so
+	// chown the mount point before installing or `npm install` fails with EACCES.
+	// The typescript-node image grants `node` passwordless sudo.
+	"postCreateCommand": "sudo chown node:node node_modules && npm install",
+
+	// node_modules holds platform-specific native binaries (rolldown, sharp).
+	// The workspace is bind-mounted from the host, so a host `npm install` (macOS)
+	// would otherwise expose darwin binaries to this Linux container and break
+	// `astro dev` with "Cannot find native binding". Keep node_modules as a
+	// container-only volume so postCreateCommand's install populates it with Linux
+	// binaries, isolated from whatever the host has.
+	"mounts": [
+		"source=katomatik-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+	],
 
 	"forwardPorts": [4321],
 	"portsAttributes": {
