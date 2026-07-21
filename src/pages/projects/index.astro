@@ -9,6 +9,12 @@ const projects = (
 		import.meta.env.PROD ? !data.draft : true,
 	)
 ).sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
+const tags: Record<string, boolean> = {};
+projects.forEach((project) => {
+	project.data.tags.forEach((tag) => {
+		tags[tag] = false;
+	});
+});
 ---
 
 <BaseLayout
@@ -16,6 +22,26 @@ const projects = (
 	description="Things we're building."
 	width="wide"
 >
+	{
+		Object.keys(tags).length > 0 && (
+			<div
+				id="tag-filters"
+				class="text-ink-muted -mt-11 mb-3 list-none text-right text-sm"
+			>
+				Tags:{' '}
+				{Object.keys(tags).map((label) => (
+					<button
+						id={label}
+						class="border-edge bg-page text-ink-muted m-1 inline-block w-fit cursor-pointer border px-1 pt-0.5"
+					>
+						{' '}
+						{label}{' '}
+					</button>
+				))}
+			</div>
+		)
+	}
+
 	<h1 class="text-4xl font-bold">Projects</h1>
 	<div class="wavy my-6 max-w-xs"></div>
 
@@ -24,7 +50,10 @@ const projects = (
 	<ul class="mt-8 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2">
 		{
 			projects.map((project) => (
-				<li class="border-edge border p-5">
+				<li
+					class="border-edge border p-5"
+					data-tags={JSON.stringify(project.data.tags)}
+				>
 					<a href={`/projects/${project.id}/`} class="group block no-underline">
 						<h2 class="text-ink group-hover:text-accent text-2xl font-bold transition-colors">
 							{project.data.title}
@@ -49,3 +78,33 @@ const projects = (
 		}
 	</ul>
 </BaseLayout>
+
+<script>
+	const activeTags = new Set();
+
+	function filterPosts() {
+		document.querySelectorAll('li').forEach((item) => {
+			const postTags = JSON.parse(item.getAttribute('data-tags') ?? '[]');
+			const visible =
+				activeTags.size === 0 ||
+				postTags.some((t: string) => activeTags.has(t));
+			item.classList.toggle('hidden', !visible);
+		});
+	}
+
+	document.querySelectorAll('#tag-filters button').forEach((btn) => {
+		const update = () => {
+			const active = activeTags.has(btn.id);
+			btn.classList.toggle('bg-ink-muted', active);
+			btn.classList.toggle('text-page', active);
+			btn.classList.toggle('bg-page', !active);
+			btn.classList.toggle('text-ink-muted', !active);
+		};
+		btn.addEventListener('click', () => {
+			const tag = btn.id;
+			activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+			update();
+			filterPosts();
+		});
+	});
+</script>

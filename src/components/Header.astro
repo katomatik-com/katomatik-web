@@ -12,17 +12,17 @@ import cat2 from '../assets/cat2.png';
 		<a href="/"
 			><div class="group">
 				<Image
-					class="absolute top-2.5 inline-block size-12 opacity-100 group-hover:opacity-0"
+					class="theme-dark:brightness-150 absolute top-2.5 inline-block size-12 opacity-100 group-hover:opacity-0"
 					src={cat1}
 					alt="drawing of a cat"
 				/>
 				<Image
-					class="absolute top-2.5 inline-block size-12 opacity-0 group-hover:opacity-100"
+					class="theme-dark:brightness-150 absolute top-2.5 inline-block size-12 opacity-0 group-hover:opacity-100"
 					src={cat2}
 					alt="drawing of a cat meowing"
 				/>
 				<svg
-					class="stroke-ink fill-ink relative top-8 left-10 opacity-0 transition-[left] ease-out group-hover:left-11 group-hover:opacity-100 motion-reduce:transition-none"
+					class="stroke-ink fill-ink relative top-7 left-10 opacity-0 transition-[left] ease-out group-hover:left-11 group-hover:opacity-100 motion-reduce:transition-none max-sm:hidden"
 					viewBox="0 0 14 14"
 					width="14"
 					height="14"
@@ -31,12 +31,12 @@ import cat2 from '../assets/cat2.png';
 					<path d="M0 7 14 0 14 14"></path>
 				</svg>
 				<span
-					class="bg-ink text-page relative bottom-1 left-13 inline-block rounded-lg px-2 py-1 font-bold no-underline opacity-0 transition-[left] ease-out group-hover:left-14 group-hover:opacity-100 motion-reduce:transition-none"
+					class="bg-ink text-page relative bottom-2 left-13 inline-block rounded-lg px-2 py-1 font-bold no-underline opacity-0 transition-[left] ease-out group-hover:left-14 group-hover:opacity-100 motion-reduce:transition-none max-sm:hidden"
 				>
 					{SITE_TITLE}
 				</span>
-			</div></a
-		>
+			</div>
+		</a>
 		<div class="flex items-center">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/projects">Projects</HeaderLink>
