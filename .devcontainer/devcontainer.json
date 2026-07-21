@@ -7,6 +7,16 @@
 
 	"postCreateCommand": "npm install",
 
+	// node_modules holds platform-specific native binaries (rolldown, sharp).
+	// The workspace is bind-mounted from the host, so a host `npm install` (macOS)
+	// would otherwise expose darwin binaries to this Linux container and break
+	// `astro dev` with "Cannot find native binding". Keep node_modules as a
+	// container-only volume so postCreateCommand's install populates it with Linux
+	// binaries, isolated from whatever the host has.
+	"mounts": [
+		"source=katomatik-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+	],
+
 	"forwardPorts": [4321],
 	"portsAttributes": {
 		"4321": {
