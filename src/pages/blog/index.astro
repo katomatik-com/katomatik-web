@@ -56,15 +56,17 @@ posts.forEach((post) => {
 								alt=""
 							/>
 						)}
-						{post.data.tags && post.data.tags.length > 0 && post.data.heroImage && (
-							<ul class="mx-2 -mt-12 mb-6 h-6 list-none overflow-hidden text-right text-sm">
-								{post.data.tags?.map((tag) => (
-									<li class="border-edge text-ink theme-light:bg-white/40 mx-1 inline-block w-fit border bg-white/10 px-1 pt-0.5">
-										{tag}
-									</li>
-								))}
-							</ul>
-						)}
+						{post.data.tags &&
+							post.data.tags.length > 0 &&
+							post.data.heroImage && (
+								<ul class="mx-2 -mt-12 mb-6 h-6 list-none overflow-hidden text-right text-sm">
+									{post.data.tags?.map((tag) => (
+										<li class="border-edge text-ink theme-light:bg-white/40 mx-1 inline-block w-fit border bg-white/10 px-1 pt-0.5">
+											{tag}
+										</li>
+									))}
+								</ul>
+							)}
 						<h4
 							class:list={[
 								'text-ink group-hover:text-accent font-bold transition-colors',
