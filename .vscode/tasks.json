@@ -1,0 +1,24 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			// The Astro extension only diagnoses files you have open; `astro check`
+			// walks the whole project. Run it in --watch so project-wide type errors
+			// stay visible in a dedicated terminal without running `npm run check`
+			// by hand. Auto-starts when the folder opens.
+			"label": "astro check (watch)",
+			"type": "shell",
+			"command": "npx astro check --watch",
+			"isBackground": true,
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"revealProblems": "onProblem"
+			},
+			"problemMatcher": []
+		}
+	]
+}
