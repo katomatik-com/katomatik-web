@@ -70,6 +70,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # QEMU registers binfmt handlers so the amd64 runner can build the
+      # linux/arm64 stage under emulation. The build is a static Astro compile,
+      # so the emulation cost is a few extra minutes, not hours.
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - uses: docker/setup-buildx-action@v4
 
       # Only authenticate when we intend to push. Pull requests from forks
@@ -99,6 +106,9 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
+          # arm64 too: the cluster node is arm64 (Apple silicon / Asahi), and a
+          # single-arch amd64 image leaves the kubelet with no matching manifest.
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
