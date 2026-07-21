@@ -1,0 +1,14 @@
+{
+	// Mirrors the formatting settings baked into .devcontainer/devcontainer.json,
+	// so host VS Code users get the same behaviour as Codespaces/devcontainer users.
+	// Keep the two in step — see CLAUDE.md.
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+
+	// .astro files are formatted by the Astro extension, which loads
+	// prettier-plugin-astro itself. Pointing them at Prettier directly
+	// works inconsistently.
+	"[astro]": {
+		"editor.defaultFormatter": "astro-build.astro-vscode"
+	}
+}
