@@ -8,6 +8,12 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const tags: Record<string, boolean> = {};
+posts.forEach((post) => {
+	post.data.tags.forEach((tag) => {
+		tags[tag] = false;
+	});
+});
 ---
 
 <BaseLayout
@@ -15,10 +21,31 @@ const posts = (await getCollection('blog')).sort(
 	description={SITE_DESCRIPTION}
 	width="wide"
 >
+	{
+		Object.keys(tags).length > 0 && (
+			<div
+				id="tag-filters"
+				class="text-ink-muted -mt-11 mb-3 list-none text-right text-sm"
+			>
+				Tags:{' '}
+				{Object.keys(tags).map((label) => (
+					<button
+						id={label}
+						class="border-edge bg-page text-ink-muted m-1 inline-block w-fit cursor-pointer border px-1 pt-0.5"
+					>
+						{label}
+					</button>
+				))}
+			</div>
+		)
+	}
 	<ul class="grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2">
 		{
 			posts.map((post, i) => (
-				<li class:list={[i === 0 && 'text-center sm:col-span-2']}>
+				<li
+					class:list={[i === 0 && 'text-center sm:col-span-2']}
+					data-tags={JSON.stringify(post.data.tags)}
+				>
 					<a href={`/blog/${post.id}/`} class="group block no-underline">
 						{post.data.heroImage && (
 							<Image
@@ -28,6 +55,15 @@ const posts = (await getCollection('blog')).sort(
 								src={post.data.heroImage}
 								alt=""
 							/>
+						)}
+						{post.data.tags.length > 0 && post.data.heroImage && (
+							<ul class="mx-2 -mt-12 mb-6 h-6 list-none overflow-hidden text-right text-sm">
+								{post.data.tags.map((tag) => (
+									<li class="border-edge text-ink theme-light:bg-white/40 mx-1 inline-block w-fit border bg-white/10 px-1 pt-0.5">
+										{tag}
+									</li>
+								))}
+							</ul>
 						)}
 						<h4
 							class:list={[
@@ -46,3 +82,33 @@ const posts = (await getCollection('blog')).sort(
 		}
 	</ul>
 </BaseLayout>
+
+<script>
+	const activeTags = new Set();
+
+	function filterPosts() {
+		document.querySelectorAll('li').forEach((item) => {
+			const postTags = JSON.parse(item.getAttribute('data-tags') ?? '[]');
+			const visible =
+				activeTags.size === 0 ||
+				postTags.some((t: string) => activeTags.has(t));
+			item.classList.toggle('hidden', !visible);
+		});
+	}
+
+	document.querySelectorAll('#tag-filters button').forEach((btn) => {
+		const update = () => {
+			const active = activeTags.has(btn.id);
+			btn.classList.toggle('bg-ink-muted', active);
+			btn.classList.toggle('text-page', active);
+			btn.classList.toggle('bg-page', !active);
+			btn.classList.toggle('text-ink-muted', !active);
+		};
+		btn.addEventListener('click', () => {
+			const tag = btn.id;
+			activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+			update();
+			filterPosts();
+		});
+	});
+</script>

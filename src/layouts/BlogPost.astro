@@ -6,7 +6,16 @@ import BaseLayout from './BaseLayout.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const {
+	title,
+	subtitle,
+	author,
+	tags,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+} = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
@@ -34,7 +43,37 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				}
 			</div>
 			<h1 class="text-4xl font-bold">{title}</h1>
+			{subtitle && <h2 class="text-base">{subtitle}</h2>}
+			{
+				author && (
+					<h3 class="text-ink-muted mr-px -mb-5 pr-1 text-right text-sm">
+						{author}
+					</h3>
+				)
+			}
+			{
+				tags?.length > 0 && !author && (
+					<ul class="text-ink-muted -mb-6 h-6 list-none overflow-hidden text-right text-sm">
+						{tags.map((tag) => (
+							<li class="border-edge mt-px ml-2 inline-block w-fit border border-b-0 px-1 pt-0.5">
+								{tag}
+							</li>
+						))}
+					</ul>
+				)
+			}
 			<hr class="border-edge mt-6" />
+			{
+				tags?.length > 0 && author && (
+					<ul class="text-ink-muted -mb-6 h-6 list-none overflow-hidden text-right text-sm">
+						{tags.map((tag) => (
+							<li class="border-edge mb-px ml-2 inline-block w-fit border border-t-0 px-1 pt-0.5">
+								{tag}
+							</li>
+						))}
+					</ul>
+				)
+			}
 		</div>
 		<div class="prose max-w-none">
 			<slot />

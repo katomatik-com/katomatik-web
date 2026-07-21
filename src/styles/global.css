@@ -35,12 +35,12 @@
 
 /* Dark — default */
 :root {
-	--c-page: #454545;
-	--c-raised: #515151;
+	--c-page: #3c3c3c;
+	--c-raised: #4a4a4a;
 	--c-edge: #6b6b6b;
 	--c-ink: whitesmoke;
 	--c-ink-muted: #b8b8b8;
-	--c-accent: #f2b134;
+	--c-accent: #f29034;
 	--c-outline: #ffffff; /* hover halo, was hardcoded white */
 	color-scheme: dark;
 }
@@ -53,7 +53,7 @@
 		--c-edge: #cfcfcf;
 		--c-ink: #2a2a2a;
 		--c-ink-muted: #5c5c5c;
-		--c-accent: #9a6410;
+		--c-accent: #9a5510;
 		--c-outline: #000000;
 		color-scheme: light;
 	}
@@ -65,18 +65,18 @@
 	--c-edge: #cfcfcf;
 	--c-ink: #2a2a2a;
 	--c-ink-muted: #5c5c5c;
-	--c-accent: #9a6410;
+	--c-accent: #9a5510;
 	--c-outline: #000000;
 	color-scheme: light;
 }
 
 :root[data-theme='dark'] {
-	--c-page: #454545;
-	--c-raised: #515151;
+	--c-page: #3c3c3c;
+	--c-raised: #4a4a4a;
 	--c-edge: #6b6b6b;
 	--c-ink: whitesmoke;
 	--c-ink-muted: #b8b8b8;
-	--c-accent: #f2b134;
+	--c-accent: #f29034;
 	--c-outline: #ffffff;
 	color-scheme: dark;
 }
