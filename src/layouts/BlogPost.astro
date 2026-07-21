@@ -52,7 +52,7 @@ const {
 				)
 			}
 			{
-				tags?.length > 0 && !author && (
+				tags && tags.length > 0 && !author && (
 					<ul class="text-ink-muted -mb-6 h-6 list-none overflow-hidden text-right text-sm">
 						{tags.map((tag) => (
 							<li class="border-edge mt-px ml-2 inline-block w-fit border border-b-0 px-1 pt-0.5">
@@ -64,7 +64,7 @@ const {
 			}
 			<hr class="border-edge mt-6" />
 			{
-				tags?.length > 0 && author && (
+				tags && tags.length > 0 && author && (
 					<ul class="text-ink-muted -mb-6 h-6 list-none overflow-hidden text-right text-sm">
 						{tags.map((tag) => (
 							<li class="border-edge mb-px ml-2 inline-block w-fit border border-t-0 px-1 pt-0.5">

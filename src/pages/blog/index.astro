@@ -10,7 +10,7 @@ const posts = (await getCollection('blog')).sort(
 );
 const tags: Record<string, boolean> = {};
 posts.forEach((post) => {
-	post.data.tags.forEach((tag) => {
+	post.data.tags?.forEach((tag) => {
 		tags[tag] = false;
 	});
 });
@@ -56,9 +56,9 @@ posts.forEach((post) => {
 								alt=""
 							/>
 						)}
-						{post.data.tags.length > 0 && post.data.heroImage && (
+						{post.data.tags && post.data.tags.length > 0 && post.data.heroImage && (
 							<ul class="mx-2 -mt-12 mb-6 h-6 list-none overflow-hidden text-right text-sm">
-								{post.data.tags.map((tag) => (
+								{post.data.tags?.map((tag) => (
 									<li class="border-edge text-ink theme-light:bg-white/40 mx-1 inline-block w-fit border bg-white/10 px-1 pt-0.5">
 										{tag}
 									</li>
