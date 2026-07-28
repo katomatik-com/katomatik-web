@@ -73,7 +73,7 @@ jobs:
       # QEMU registers binfmt handlers so the amd64 runner can build the
       # linux/arm64 stage under emulation. The build is a static Astro compile,
       # so the emulation cost is a few extra minutes, not hours.
-      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-qemu-action@v4
         with:
           platforms: arm64
 
