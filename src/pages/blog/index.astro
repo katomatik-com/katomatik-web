@@ -43,7 +43,7 @@ posts.forEach((post) => {
 		{
 			posts.map((post, i) => (
 				<li
-					// class:list={[i === 0 && 'text-center sm:col-span-2']}
+					/* class:list={[i === 0 && 'text-center sm:col-span-2']} */
 					data-tags={JSON.stringify(post.data.tags)}
 				>
 					<a href={`/blog/${post.id}/`} class="group block no-underline">
@@ -70,7 +70,7 @@ posts.forEach((post) => {
 						<h4
 							class:list={[
 								'text-ink group-hover:text-accent font-bold transition-colors',
-								// i === 0 ? 'text-3xl' : 'text-xl',
+								/* i === 0 ? 'text-3xl' : 'text-xl', */
 							]}
 						>
 							{post.data.title}
