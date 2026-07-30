@@ -41,11 +41,8 @@ posts.forEach((post) => {
 	}
 	<ul class="grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2">
 		{
-			posts.map((post, i) => (
-				<li
-					/* class:list={[i === 0 && 'text-center sm:col-span-2']} */
-					data-tags={JSON.stringify(post.data.tags)}
-				>
+			posts.map((post) => (
+				<li data-tags={JSON.stringify(post.data.tags)}>
 					<a href={`/blog/${post.id}/`} class="group block no-underline">
 						{post.data.heroImage && (
 							<Image
@@ -67,13 +64,7 @@ posts.forEach((post) => {
 									))}
 								</ul>
 							)}
-						<h4
-							class:list={[
-								'text-ink group-hover:text-accent font-bold transition-colors',
-								i === 0 ? 'text-xl' : 'text-xl'
-								/* i === 0 ? 'text-3xl' : 'text-xl', */
-							]}
-						>
+						<h4 class="text-ink group-hover:text-accent text-xl font-bold transition-colors">
 							{post.data.title}
 						</h4>
 						<p class="text-ink-muted group-hover:text-accent transition-colors">
