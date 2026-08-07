@@ -106,7 +106,7 @@ jobs:
           tags: |
             type=raw,value={{date 'YYYYMMDD'}}.{{date 'HHmmss'}}-{{sha}}
             type=sha,format=long
-            type=sha,prefix=   
+            type=sha,prefix=
 
       # The image build runs `npm run build`, which runs `astro check` first,
       # so a type error fails here. There is no separate typecheck step.
