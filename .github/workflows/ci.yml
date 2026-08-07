@@ -96,9 +96,17 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # SHA tags only — no `latest`. Kubernetes rollouts must reference an
           # immutable tag, otherwise "redeploy" means "whatever latest is now".
+          #
+          # The timestamped tag is the one the infra repo pins. It exists because
+          # a SHA has no ordering: Renovate cannot tell f23db80 from be6ef2d, so
+          # it could never propose an upgrade. YYYYMMDD.HHmmss sorts, and the
+          # trailing short SHA keeps the commit readable in the manifest.
+          # Seconds are not decoration — two builds in one day would otherwise
+          # tie, and a tie reads as "nothing newer".
           tags: |
+            type=raw,value={{date 'YYYYMMDD'}}.{{date 'HHmmss'}}-{{sha}}
             type=sha,format=long
-            type=sha,prefix=
+            type=sha,prefix=   
 
       # The image build runs `npm run build`, which runs `astro check` first,
       # so a type error fails here. There is no separate typecheck step.
